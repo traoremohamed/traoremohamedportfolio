@@ -254,7 +254,8 @@ class GenerermenuController extends Controller
             //dd($roles->name);
             $roles->name = $roles->name;
             $roles->save();
-            $roles->syncPermissions($request->permission);
+            // Spatie Permission >= 6 traite les chaînes numériques comme des noms : on passe des entiers
+            $roles->syncPermissions(collect($request->permission)->map(fn ($id) => (int) $id)->values()->all());
             return redirect('/menuprofil')->with('success', 'Attribution effectuée avec succès');
         }
 

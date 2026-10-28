@@ -56,6 +56,46 @@ $couleur = Menu::get_info_couleur();
     <!-- Page CSS -->
     <!-- Page -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+        .panneau-stats {
+            position: relative; width: 100%; display: flex; align-items: center; overflow: hidden; color: #dfe8fb;
+            background: linear-gradient(160deg, #0a1838 0%, #0d2150 55%, #1a3fae 100%) !important;
+        }
+        .panneau-stats .grille-plan {
+            position: absolute; inset: 0; opacity: .5; pointer-events: none;
+            background-image: linear-gradient(rgba(156, 192, 255, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(156, 192, 255, .08) 1px, transparent 1px);
+            background-size: 32px 32px; animation: glisse-grille 30s linear infinite;
+        }
+        @keyframes glisse-grille { to { background-position: 32px 32px, 32px 32px; } }
+        .panneau-stats .mono { font-family: 'IBM Plex Mono', monospace; font-size: .74rem; letter-spacing: .03em; }
+        .contenu-stats { position: relative; width: 100%; max-width: 720px; margin: 0 auto; padding: 48px 56px; }
+        .entete-stats { display: flex; justify-content: space-between; color: #9cc0ff; padding-bottom: 14px; border-bottom: 1px solid rgba(156, 192, 255, .25); }
+        .contenu-stats h2 { font-family: 'Newsreader', Georgia, serif; font-weight: 400; color: #fff; font-size: 2.5rem; margin: 28px 0 30px; }
+        .tuiles { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid rgba(156, 192, 255, .35); }
+        .tuile { padding: 20px 16px 0 0; opacity: 0; animation: apparait .8s cubic-bezier(.16, 1, .3, 1) forwards; }
+        .tuile + .tuile { padding-left: 16px; border-left: 1px solid rgba(156, 192, 255, .18); }
+        .tuile b { display: block; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 2.8rem; line-height: 1; color: #fff; }
+        .tuile span { display: block; margin-top: 8px; font-size: .82rem; color: #9fb2d8; }
+        .deux-blocs { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 44px; }
+        .titre-bloc { display: block; color: #9cc0ff; text-transform: uppercase; margin-bottom: 16px; }
+        .ligne-app { margin-bottom: 14px; }
+        .ligne-app .lib { display: flex; justify-content: space-between; font-size: .86rem; margin-bottom: 6px; color: #dfe8fb; }
+        .ligne-app .rail { height: 4px; background: rgba(156, 192, 255, .15); }
+        .ligne-app .rail i { display: block; height: 100%; width: 0; background: #2f66ff; animation: remplit 1.2s cubic-bezier(.16, 1, .3, 1) forwards; }
+        @keyframes remplit { to { width: var(--v); } }
+        .histo { display: flex; align-items: flex-end; gap: 10px; height: 150px; border-bottom: 1px solid rgba(156, 192, 255, .35); }
+        .colonne { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; }
+        .colonne i { display: block; width: 100%; height: 0; background: linear-gradient(180deg, #5b8cff, #1f4fd8); animation: pousse 1.1s cubic-bezier(.16, 1, .3, 1) forwards; }
+        @keyframes pousse { to { height: max(3px, calc(var(--h) - 24px)); } }
+        .colonne .val { color: #fff; margin-bottom: 4px; }
+        .colonne .mois { position: absolute; bottom: -22px; color: #9fb2d8; text-transform: capitalize; }
+        @keyframes apparait { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+        @media (max-width: 1300px) { .contenu-stats { padding: 40px 36px; } .tuile b { font-size: 2.2rem; } .deux-blocs { gap: 28px; } }
+        @media (prefers-reduced-motion: reduce) {
+            .panneau-stats *, .panneau-stats { animation-duration: .01ms !important; animation-delay: 0s !important; }
+        }
+    </style>
 
     <!-- Helpers -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
@@ -72,12 +112,69 @@ $couleur = Menu::get_info_couleur();
         <div class="authentication-inner row">
             <!-- /Left Text -->
             <div class="d-none d-lg-flex col-lg-7 p-0">
-                <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
-                    <img src="{{ asset('assets/img/illustrations/auth-login-illustration-light.png') }}"
-                        alt="auth-login-cover" class="img-fluid my-5 auth-illustration" />
+                <div class="auth-cover-bg panneau-stats">
+                    @php
+                        $demandes = \App\Models\DemandeAcces::query();
+                        $stats = [
+                            ['Demandes reçues', (clone $demandes)->count()],
+                            ['Comptes ouverts', (clone $demandes)->where('statut', 'TRAITEE')->count()],
+                            ['En attente', (clone $demandes)->whereIn('statut', ['EN_ATTENTE', 'EN_COURS'])->count()],
+                            ['Messages reçus', \App\Models\MessageContact::count()],
+                        ];
+                        $parApplication = (clone $demandes)->selectRaw('application, count(*) as total')->groupBy('application')->pluck('total', 'application');
+                        $maxApplication = max(1, $parApplication->max() ?? 0);
 
-                    <img src="{{ asset('assets/img/illustrations/bg-shape-image-light.png') }}" alt="auth-login-cover"
-                        class="platform-bg" />
+                        $debut = now()->subMonths(5)->startOfMonth();
+                        $parMois = (clone $demandes)->where('created_at', '>=', $debut)->get(['created_at'])
+                            ->countBy(fn ($d) => $d->created_at->format('Y-m'));
+                        $mois = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->startOfMonth())
+                            ->map(fn ($m) => ['lib' => $m->translatedFormat('M'), 'total' => $parMois[$m->format('Y-m')] ?? 0]);
+                        $maxMois = max(1, $mois->max('total'));
+                    @endphp
+
+                    <div class="grille-plan"></div>
+                    <div class="contenu-stats">
+                        <div class="entete-stats">
+                            <span class="mono">Portfolio · Traoré Mohamed</span>
+                            <span class="mono">{{ now()->translatedFormat('d M Y') }}</span>
+                        </div>
+
+                        <h2>Activité du portfolio</h2>
+
+                        <div class="tuiles">
+                            @foreach ($stats as $i => [$libelle, $valeur])
+                                <div class="tuile" style="animation-delay: {{ .15 + $i * .1 }}s">
+                                    <b data-compte="{{ $valeur }}">0</b>
+                                    <span>{{ $libelle }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="deux-blocs">
+                            <div class="bloc">
+                                <span class="mono titre-bloc">Demandes par logiciel</span>
+                                @foreach (config('portfolio.applications') as $code => $app)
+                                    @php($total = $parApplication[$code] ?? 0)
+                                    <div class="ligne-app">
+                                        <div class="lib"><span>{{ $app['nom'] }}</span><span class="mono">{{ $total }}</span></div>
+                                        <div class="rail"><i style="--v: {{ round($total / $maxApplication * 100) }}%; animation-delay: {{ .5 + $loop->index * .12 }}s"></i></div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="bloc">
+                                <span class="mono titre-bloc">Demandes, 6 derniers mois</span>
+                                <div class="histo">
+                                    @foreach ($mois as $m)
+                                        <div class="colonne">
+                                            <span class="mono val">{{ $m['total'] }}</span>
+                                            <i style="--h: {{ max(4, round($m['total'] / $maxMois * 100)) }}%; animation-delay: {{ .6 + $loop->index * .08 }}s"></i>
+                                            <span class="mono mois">{{ $m['lib'] }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- /Left Text -->
@@ -136,9 +233,6 @@ $couleur = Menu::get_info_couleur();
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Mon mot de passe</label>
-                                <a href="{{ route('motdepasseoublie') }}">
-                                    <small>Mot de passe oublié ?</small>
-                                </a>
                             </div>
                             <div class="input-group input-group-sm ">
                                 <input type="password" id="password" class="form-control form-control-sm"
@@ -261,6 +355,15 @@ $couleur = Menu::get_info_couleur();
     <script src="{{ asset('assets/js/pages-auth.js') }}"></script>
 
     <script type="text/javascript">
+        document.querySelectorAll('.panneau-stats [data-compte]').forEach(function (el) {
+            var cible = +el.dataset.compte, debut = performance.now();
+            (function pas(t) {
+                var p = Math.min((t - debut) / 1300, 1);
+                el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 4)));
+                if (p < 1) requestAnimationFrame(pas);
+            })(debut);
+        });
+
         $('#reload').click(function() {
             //alert('tesr');
             $.ajax({

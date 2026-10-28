@@ -39,7 +39,7 @@ class MotDePasseOublieController extends Controller
                     ->where('flag_expired_mot_de_passe_oublie',false)->first();
                 if(isset($mot_de_passe_trouv)){
                     if($now->isAfter($mot_de_passe_trouv->date_expired_mot_de_passe_oublie)!=true){
-                        return redirect('/motdepasseoublie')->with('error', 'Vous pouvez réessayer dans '.CarbonInterval::seconds(Carbon::parse($mot_de_passe_trouv->date_expired_mot_de_passe_oublie)->diffInSeconds($now))->cascade()->forHumans());
+                        return redirect('/motdepasseoublie')->with('error', 'Vous pouvez réessayer dans '.CarbonInterval::seconds((int) $now->diffInSeconds(Carbon::parse($mot_de_passe_trouv->date_expired_mot_de_passe_oublie), true))->cascade()->forHumans());
                     }
                     $mot_de_passe_trouv->flag_expired_mot_de_passe_oublie = true;
                     $mot_de_passe_trouv->update();

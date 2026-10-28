@@ -14,6 +14,8 @@ Route::view("/500", "errors.500")->name('500');
 //Route::get('/403', function () { return redirect('/home/dashboard'); });
 
 Route::match(['get', 'post'], '/', [App\Http\Controllers\IndexController::class, 'index'])->name('/');
+Route::post('/portfolio/contact', [App\Http\Controllers\IndexController::class, 'contact'])->middleware('throttle:5,10')->name('portfolio.contact');
+Route::post('/portfolio/demande-acces', [App\Http\Controllers\IndexController::class, 'demandeAcces'])->middleware('throttle:5,10')->name('portfolio.demande');
 Route::match(['get', 'post'], '/login', [App\Http\Controllers\ConnexionController::class, 'login'])->name('login');
 Route::match(['get', 'post'], '/connexion', [App\Http\Controllers\ConnexionController::class, 'login'])->name('connexion');
 Route::get('/deconnexion', [App\Http\Controllers\HomeController::class, 'deconnexion']);
@@ -29,10 +31,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resources([
         'audits' => App\Http\Controllers\AuditController::class,
     ]);
-
-
-
-
 
     Route::group(['middleware' => ['can:role-index']], function () {
         Route::resources([
@@ -82,6 +80,33 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], '/modifiermotdepasse/{id}', [App\Http\Controllers\HomeController::class, 'updatepassword'])->name('modifiermotpasse');
 
 
+
+    Route::group(['middleware' => ['can:demandesacces-index']], function () {
+        Route::get('/demandesacces', [App\Http\Controllers\DemandeAccesController::class, 'index'])->name('demandesacces.index');
+        Route::get('/demandesacces/{id}', [App\Http\Controllers\DemandeAccesController::class, 'show'])->name('demandesacces.show');
+        Route::group(['middleware' => ['can:demandesacces-edit']], function () {
+            Route::post('/demandesacces/{id}/traiter', [App\Http\Controllers\DemandeAccesController::class, 'traiter'])->name('demandesacces.traiter');
+            Route::post('/demandesacces/{id}/renvoyer', [App\Http\Controllers\DemandeAccesController::class, 'renvoyer'])->name('demandesacces.renvoyer');
+            Route::post('/demandesacces/{id}/rejeter', [App\Http\Controllers\DemandeAccesController::class, 'rejeter'])->name('demandesacces.rejeter');
+        });
+    });
+
+    Route::group(['middleware' => ['can:messagescontact-index']], function () {
+        Route::get('/messagescontact', [App\Http\Controllers\MessageContactController::class, 'index'])->name('messagescontact.index');
+        Route::get('/messagescontact/{id}', [App\Http\Controllers\MessageContactController::class, 'show'])->name('messagescontact.show');
+        Route::group(['middleware' => ['can:messagescontact-edit']], function () {
+            Route::post('/messagescontact/{id}/repondre', [App\Http\Controllers\MessageContactController::class, 'repondre'])->name('messagescontact.repondre');
+            Route::delete('/messagescontact/{id}', [App\Http\Controllers\MessageContactController::class, 'destroy'])->name('messagescontact.destroy');
+        });
+    });
+
+    Route::group(['middleware' => ['can:parametresmail-index']], function () {
+        Route::get('/parametresmail', [App\Http\Controllers\ParametreMailController::class, 'index'])->name('parametresmail.index');
+        Route::group(['middleware' => ['can:parametresmail-edit']], function () {
+            Route::post('/parametresmail', [App\Http\Controllers\ParametreMailController::class, 'update'])->name('parametresmail.update');
+            Route::post('/parametresmail/test', [App\Http\Controllers\ParametreMailController::class, 'test'])->name('parametresmail.test');
+        });
+    });
 
     Route::group(['middleware' => ['can:parametresysteme-index']], function () {
         Route::match(['get', 'post'], '/parametresysteme', [App\Http\Controllers\ParametreController::class, 'parametresysteme'])->name('parametresysteme');

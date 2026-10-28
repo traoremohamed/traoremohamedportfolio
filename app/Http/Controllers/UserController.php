@@ -36,8 +36,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $data = User::with('agence:num_agce,lib_agce')
-                ->where([['flag_demission_users', '=', false], ['flag_admin_users', '=', false]])
+        // Le modèle et la table « agence » n'existent pas dans ce projet : pas de chargement de la relation
+        $data = User::where([['flag_demission_users', '=', false], ['flag_admin_users', '=', false]])
                 ->get();
        //dd($data);
        Audit::logSave([
@@ -72,10 +72,8 @@ class UserController extends Controller
             $roles .= "<option  value='" . $comp->name ."'   > " . ucfirst($comp->name) . " </option>";
         }
         //dd($roles);
-        $Entite = Agence::where([['flag_agce', '=', true]])->get();
-        foreach ($Entite as $comp) {
-            $Entite .= "<option  value='" . $comp->num_agce . "'   > " . $comp->lib_agce . " </option>";
-        }
+        // Liste des agences désactivée dans la vue (table « agence » absente)
+        $Entite = '';
 
 
 
@@ -221,11 +219,8 @@ class UserController extends Controller
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->first();
         //$userRole = $user->roles->pluck('name', 'name')->all();
-        $Entite = Agence::where([['flag_agce', '=', true]])->get();
-        foreach ($Entite as $comp) {
-            if ($user->num_agce == $comp->num_agce) {$val = 'selected="selected"'; } else { $val = '';}
-            $Entite .= "<option  value='" . $comp->num_agce . "' $val  > " . $comp->lib_agce . " </option>";
-        }
+        // Liste des agences désactivée dans la vue (table « agence » absente)
+        $Entite = '';
 
         $Roless = Role::get();
 

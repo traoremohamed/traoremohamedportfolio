@@ -171,7 +171,6 @@ return [
 
         /***************Ajout par YAO*******************/
         Spatie\Permission\PermissionServiceProvider::class,
-        Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class,
         Spatie\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,

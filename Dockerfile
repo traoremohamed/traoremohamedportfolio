@@ -32,15 +32,9 @@ RUN composer install --no-scripts --prefer-dist --optimize-autoloader --no-dev
 # Copier tout le contenu de l'application Laravel
 COPY . .
 
-# Installer les clés Passport (ajouter un montage pour les fichiers persistants)
-RUN mkdir -p /var/www/html/storage/oauth && \
-    php artisan passport:keys && \
-    php artisan passport:install --force
-
-
-# Configurer les permissions des clés Passport
-RUN chmod 600 /var/www/html/storage/oauth/*.key && \
-    chown -R www-data:www-data /var/www/html/storage/oauth
+# Régénérer l'autoload avec le code de l'application et découvrir les paquets
+RUN composer dump-autoload --optimize --no-dev && \
+    php artisan package:discover --ansi
 
 # Définir les permissions correctes
 RUN chown -R www-data:www-data /var/www/html && \
