@@ -1,5 +1,6 @@
 @php
     $anneesExperience = (int) \Carbon\Carbon::parse('2018-12-01')->diffInYears(now());
+    $atoutsCommuns = config('portfolio.atouts_communs', []);
 
     $projets = [
         [
@@ -39,26 +40,11 @@
         ],
     ];
 
-    $apports = [
-        ['Je parle aux deux côtés de la table', "J'ai codé avant de piloter. En comité, je traduis les besoins des directions métier en lots réalistes, et je sais ce que je demande à l'équipe technique."],
-        ['La donnée fait partie du livrable', "Sur mes projets, l'application arrive avec ses flux ETL, ses tableaux de bord Power BI et, quand c'est utile, un modèle prédictif."],
-        ["L'habitude des institutions", "CNPS, FDFP, FAFCI, AEJ, GNA Assurances : je connais les circuits de validation, les exigences de sécurité et le rythme des recettes."],
-        ['Je livre jusqu\'en production', "Docker, GitLab CI/CD, Coolify et Linux. Je forme aussi les équipes qui reprennent l'exploitation."],
-    ];
-
-    // Ce que je « dis » dans la bulle, dans le même ordre que $apports
-    $paroles = [
-        "Avant de piloter, j'ai codé. Alors quand je demande quelque chose à une équipe, je sais ce que ça représente.",
-        "Une application sans ses données, c'est la moitié du travail. Je livre aussi les tableaux de bord qui servent à décider.",
-        "Les institutions ont leurs circuits et leurs délais. Je les connais, et je planifie avec.",
-        "Pour moi, un projet est fini quand il tourne en production et que l'équipe sait l'exploiter.",
-    ];
-
     $horizon = [
         ['hier', '2018', 'Le code', 'Laravel, API REST, mobile. Les bases du métier.'],
         ['present', "Aujourd'hui", 'Le pilotage', 'Projets CNPS, FDFP, FAFCI, AEJ. Équipes, délais, recettes.'],
         ['encours', 'En cours', "L'IA et le Big Data", 'Deux mastères spécialisés, appliqués à mes projets.'],
-        ['futur', 'Demain', "L'IA dans les processus métier", 'Scoring, assistants, plateformes data pour les institutions.'],
+        ['futur', 'Perspectives', "Data et intelligence artificielle", 'Approfondir ces sujets et les intégrer aux projets lorsque le besoin le justifie.'],
     ];
 
     $competences = [
@@ -90,9 +76,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Traoré Mohamed, chef de projet & ingénieur logiciel</title>
-    <meta name="description" content="Traoré Mohamed, chef de projet et ingénieur logiciel & data à Abidjan. Projets CNPS, FDFP, FAFCI, AEJ. Éditeur de 4 logiciels SaaS.">
-    <meta property="og:title" content="Traoré Mohamed, chef de projet & ingénieur logiciel">
+    <title>Mohamed Traoré | Chef de projet IT & ingénieur logiciel</title>
+    <meta name="description" content="Mohamed Traoré, chef de projet IT et ingénieur logiciel à Abidjan. Expérience en pilotage de projets, développement logiciel, Data et solutions métier.">
+    <meta property="og:title" content="Mohamed Traoré | Chef de projet IT & ingénieur logiciel">
     <meta property="og:image" content="{{ asset('frontend/img/traore-mohamed.jpg') }}">
     <link rel="icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -124,7 +110,7 @@
         ::selection { background: var(--cobalt); color: #fff; }
         .cadre { width: min(1180px, 100% - 40px); margin-inline: auto; }
         .mono { font-family: var(--mono); font-size: .78rem; letter-spacing: .02em; }
-        .hero .cadre > *, .profil > *, .bloc-form > *, .etude > *, .logiciel > *, .titre-section > * { min-width: 0; }
+        .hero .cadre > *, .profil > *, .bloc-form > *, .etude > *, .titre-section > * { min-width: 0; }
 
         /* ---------- En-tête ---------- */
         .entete {
@@ -223,7 +209,8 @@
         .titre-section h2 em { color: var(--cobalt); }
         .decale { margin-left: 260px; }
 
-        .revele { opacity: 0; transform: translateY(18px); transition: opacity .9s var(--sortie), transform .9s var(--sortie); }
+        .revele { opacity: 1; transform: none; transition: opacity .9s var(--sortie), transform .9s var(--sortie); }
+        .js-animations .revele { opacity: 0; transform: translateY(18px); }
         .revele.vu { opacity: 1; transform: none; }
 
         /* Chiffres */
@@ -414,19 +401,111 @@
 
         /* ---------- Solutions ---------- */
         .solutions { background: var(--blanc); border-top: 1px solid var(--ligne); }
-        .logiciels { border-top: 1px solid var(--encre); }
-        .logiciel { display: grid; grid-template-columns: 70px 1.1fr 1.4fr auto; gap: 30px; align-items: start; padding: 34px 0; border-bottom: 1px solid var(--ligne); position: relative; isolation: isolate; }
-        .logiciel::before { content: ''; position: absolute; inset: 0 -20px; background: var(--brume); transform: scaleY(0); transform-origin: bottom; transition: transform .5s var(--sortie); z-index: -1; }
-        .logiciel:hover::before { transform: none; }
-        .logiciel .idx { color: var(--cobalt); padding-top: 10px; }
-        .logiciel h3 { font-family: var(--serif); font-weight: 400; font-size: 2.1rem; line-height: 1.05; }
-        .logiciel .slogan { color: var(--gris); margin-top: 6px; font-size: .95rem; }
-        .logiciel .url { display: inline-block; margin-top: 10px; color: var(--cobalt); }
-        .logiciel .url:hover { text-decoration: underline; }
-        .logiciel .desc { color: #34446a; }
-        .logiciel .fonctions { margin-top: 12px; color: var(--gris); }
-        .logiciel .actions-l { display: flex; flex-direction: column; gap: 10px; padding-top: 6px; }
-        .logiciel .bouton { padding: 11px 18px; font-size: .88rem; }
+        .solutions .chapeau { margin-top: 20px; max-width: 700px; color: #3a4a6e; font-size: 1.05rem; }
+
+        /* Atouts communs */
+        .atouts { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--encre); margin-bottom: 70px; }
+        .atouts > div { padding: 22px 26px 26px 0; border-bottom: 1px solid var(--ligne); }
+        .atouts > div:not(:nth-child(3n+1)) { padding-left: 26px; border-left: 1px solid var(--ligne); }
+        .atouts .mono { color: var(--cobalt); }
+        .atouts h3 { font-family: var(--serif); font-weight: 500; font-size: 1.25rem; margin: 6px 0 6px; line-height: 1.2; }
+        .atouts p { color: #3a4a6e; font-size: .93rem; }
+
+        /* Sélecteur */
+        .selecteur { position: sticky; top: 68px; z-index: 20; background: rgba(255, 255, 255, .96); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 14px 0 0; border-bottom: 1px solid var(--ligne); }
+        .legende-sel { display: block; color: var(--gris); margin-bottom: 10px; }
+        .onglets { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 2px; }
+        .onglet { min-width: 0; padding: 10px 10px 12px; border-top: 3px solid transparent; background: var(--papier); transition: background .25s, border-color .25s; scroll-snap-align: start; }
+        .onglet span { display: block; color: var(--gris); font-size: .64rem; line-height: 1.35; min-height: 2.7em; }
+        .onglet b { display: block; font-family: var(--serif); font-weight: 500; font-size: .92rem; line-height: 1.2; letter-spacing: -.015em; }
+        .onglet:hover { background: var(--brume); }
+        .onglet[aria-selected="true"] { background: var(--blanc); border-top-color: var(--teinte); box-shadow: inset 1px 0 0 var(--ligne), inset -1px 0 0 var(--ligne); }
+        .onglet[aria-selected="true"] span { color: var(--teinte); }
+        .onglet:focus-visible { outline: 2px solid var(--cobalt); outline-offset: -2px; }
+
+        /* Fiche d'un logiciel */
+        .fiches { margin-top: 0; }
+        .produit { padding: 44px 0 56px; border-bottom: 1px solid var(--ligne); scroll-margin-top: 240px; }
+        .js-onglets .produit { display: none; border-bottom: 0; }
+        .js-onglets .produit.active { display: block; animation: fiche-entre .6s var(--sortie); }
+        @keyframes fiche-entre { from { opacity: 0; transform: translateY(12px); } }
+        .fiche-tete { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 30px; }
+        .fiche-tete > * { min-width: 0; }
+        .produit .secteur { color: var(--teinte); text-transform: uppercase; letter-spacing: .08em; }
+        .produit .secteur i { font-style: normal; color: var(--ligne); margin: 0 4px; }
+        .produit .statut { color: var(--gris); }
+        .produit h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height: 1; margin: 10px 0 10px; letter-spacing: -.01em; }
+        .produit .slogan { font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: #34446a; max-width: 680px; line-height: 1.35; }
+        .produit .pour { margin-top: 12px; color: var(--gris); font-size: .95rem; max-width: 680px; }
+        .produit .pour .mono { color: var(--encre); margin-right: 6px; text-transform: uppercase; }
+        .produit .actions-l { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+        .produit .url { color: var(--cobalt); }
+        .produit .url:hover { text-decoration: underline; }
+
+        /* Vitrine : capture principale, miniatures, téléphones */
+        .vitrine { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: start; }
+        .vitrine.avec-mobile { grid-template-columns: minmax(0, 1fr) auto; }
+        .galerie { min-width: 0; }
+        .ecran { border: 1px solid #c6d2e6; background: var(--blanc); box-shadow: 0 30px 60px -30px rgba(10, 24, 56, .35), 0 0 0 6px var(--papier); }
+        .fenetre { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: var(--papier); border-bottom: 1px solid #c6d2e6; }
+        .fenetre i { width: 9px; height: 9px; border-radius: 50%; background: #c6d2e6; }
+        .fenetre i:first-child { background: var(--teinte); }
+        .fenetre span { margin-left: 12px; padding: 2px 12px; background: var(--blanc); border: 1px solid var(--ligne); color: var(--gris); font-size: .7rem; flex: 0 1 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .agrandir { display: block; position: relative; width: 100%; padding: 0; border: 0; background: var(--papier); cursor: zoom-in; }
+        .agrandir img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; transition: opacity .25s; }
+        .agrandir img.change { opacity: .25; }
+        .loupe { position: absolute; right: 12px; bottom: 12px; padding: 5px 10px; background: rgba(10, 24, 56, .82); color: #fff; opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .25s; }
+        .agrandir:hover .loupe, .agrandir:focus-visible .loupe { opacity: 1; transform: none; }
+        .ecran figcaption { padding: 12px 16px; border-top: 1px solid var(--ligne); color: #34446a; font-size: .93rem; min-height: 48px; }
+        .ecran .compteur { color: var(--teinte); margin-right: 8px; }
+        .miniatures { display: flex; gap: 10px; margin-top: 16px; overflow-x: auto; padding: 4px 2px 8px; scrollbar-width: thin; }
+        .miniature { flex: 0 0 132px; padding: 0; border: 1px solid var(--ligne); background: var(--blanc); cursor: pointer; opacity: .62; transition: opacity .25s, border-color .25s, transform .25s; }
+        .miniature img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+        .miniature:hover { opacity: 1; transform: translateY(-2px); }
+        .miniature.active { opacity: 1; border-color: var(--teinte); box-shadow: 0 0 0 1px var(--teinte); }
+        .miniature:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+        .telephones { display: flex; gap: 16px; }
+        .telephone { width: 190px; }
+        .telephone img { width: 100%; border: 8px solid var(--encre); border-radius: 26px; background: var(--encre); box-shadow: 0 24px 50px -24px rgba(10, 24, 56, .5); }
+        .telephone figcaption { margin-top: 10px; color: var(--gris); font-size: .7rem; text-align: center; }
+
+        /* Chiffres, argumentaire, modules */
+        .indicateurs { display: grid; grid-template-columns: repeat(4, 1fr); margin: 44px 0 40px; border-top: 1px solid var(--encre); border-bottom: 1px solid var(--ligne); }
+        .indicateurs div { padding: 18px 18px 18px 0; }
+        .indicateurs div + div { padding-left: 18px; border-left: 1px solid var(--ligne); }
+        .indicateurs b { display: block; font-family: var(--serif); font-weight: 400; font-size: 2.3rem; line-height: 1.05; color: var(--teinte); }
+        .indicateurs span { display: block; margin-top: 4px; color: var(--gris); font-size: .88rem; }
+        .argumentaire { display: grid; grid-template-columns: .8fr 1.6fr; gap: 50px; }
+        .argumentaire > * { min-width: 0; }
+        .argumentaire h4 { font-weight: 500; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+        .constat h4 { color: #b4232c; }
+        .gains h4 { color: #15803d; }
+        .constat ul { list-style: none; padding: 20px 22px; background: #fbf3f3; border-left: 2px solid #e5a3a7; }
+        .constat li { padding: 9px 0; }
+        .constat li + li { border-top: 1px dashed #edc8ca; }
+        .constat b { display: block; font-weight: 600; font-size: .95rem; }
+        .constat span { display: block; color: #5b4a52; font-size: .9rem; margin-top: 2px; }
+        .grille-gains { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; }
+        .grille-gains > div { padding: 14px 0 16px 28px; border-top: 1px solid var(--ligne); position: relative; }
+        .grille-gains > div::before { content: '✓'; position: absolute; left: 0; top: 14px; width: 18px; height: 18px; display: grid; place-items: center; font-size: .7rem; color: #fff; background: #15803d; border-radius: 50%; }
+        .grille-gains h5 { font-size: 1rem; font-weight: 600; line-height: 1.35; }
+        .grille-gains p { color: #3a4a6e; font-size: .92rem; margin-top: 4px; }
+        .pied-fiche { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--ligne); }
+        .modules-l { display: flex; flex-wrap: wrap; gap: 8px; }
+        .modules-l span { border: 1px solid var(--ligne); padding: 4px 10px; color: #34446a; font-size: .74rem; background: var(--papier); }
+        .pied-fiche .bouton { flex-shrink: 0; }
+        .note-captures { margin-top: 26px; color: var(--gris); }
+
+        /* Visionneuse */
+        .visionneuse { width: min(1500px, 96vw); max-width: none; max-height: 96vh; margin: auto; padding: 0; border: 0; background: var(--encre); color: #fff; }
+        .visionneuse::backdrop { background: rgba(5, 12, 30, .86); }
+        .visionneuse[open] { display: flex; flex-direction: column; }
+        .visionneuse img { width: 100%; max-height: calc(96vh - 120px); object-fit: contain; background: #fff; }
+        .visionneuse-haut, .visionneuse-bas { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; }
+        .visionneuse-haut .mono { color: var(--ciel); }
+        .visionneuse-bas p { flex: 1; text-align: center; color: #d6e2fb; font-size: .95rem; }
+        .visionneuse button { background: none; border: 1px solid rgba(156, 192, 255, .4); color: #fff; padding: 7px 12px; cursor: pointer; }
+        .visionneuse button:hover { background: rgba(156, 192, 255, .15); }
 
         /* ---------- Formulaires ---------- */
         .bloc-form { display: grid; grid-template-columns: .75fr 1.25fr; gap: 70px; }
@@ -454,8 +533,8 @@
         .champ .msg-erreur { color: #c62828; font-size: .82rem; margin-top: 6px; display: none; }
         .champ.erreur .msg-erreur { display: block; }
         .piege { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-        .choix-apps { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #b9c6de; margin-top: 6px; }
-        .choix-apps > div + div label { border-left: 1px solid #b9c6de; }
+        .choix-apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #b9c6de; border: 1px solid #b9c6de; margin-top: 6px; }
+        .choix-apps > div { position: relative; background: var(--blanc); }
         .choix-apps input { position: absolute; opacity: 0; pointer-events: none; }
         .choix-apps label { margin: 0; display: block; text-transform: none; letter-spacing: 0; font-family: var(--sans); font-size: .86rem; color: var(--encre); padding: 13px 8px; text-align: center; cursor: pointer; transition: background .25s, color .25s; }
         .choix-apps label:hover { background: var(--brume); }
@@ -508,9 +587,20 @@
             .competences, .chiffres { grid-template-columns: 1fr 1fr; }
             .competences div:nth-child(3), .chiffres div:nth-child(3) { border-left: 0; padding-left: 0; }
             .competences div:nth-child(n+3), .chiffres div:nth-child(n+3) { margin-top: 26px; }
-            .logiciel { grid-template-columns: 50px 1fr; }
-            .logiciel .desc, .logiciel .actions-l { grid-column: 2; }
-            .logiciel .actions-l { flex-direction: row; flex-wrap: wrap; }
+            .onglets { display: flex; overflow-x: auto; scrollbar-width: thin; scroll-snap-type: x proximity; }
+            .onglet { flex: 0 0 132px; }
+            .onglet span { min-height: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .atouts { grid-template-columns: 1fr 1fr; }
+            .atouts > div:not(:nth-child(3n+1)) { padding-left: 0; border-left: 0; }
+            .atouts > div:nth-child(even) { padding-left: 22px; border-left: 1px solid var(--ligne); }
+            .fiche-tete { grid-template-columns: 1fr; align-items: start; }
+            .produit .actions-l { flex-direction: row; flex-wrap: wrap; align-items: center; }
+            .vitrine.avec-mobile { grid-template-columns: 1fr; }
+            .telephones { justify-content: center; }
+            .argumentaire { grid-template-columns: 1fr; gap: 34px; }
+            .indicateurs { grid-template-columns: 1fr 1fr; }
+            .indicateurs div:nth-child(3) { padding-left: 0; border-left: 0; }
+            .indicateurs div:nth-child(n+3) { border-top: 1px solid var(--ligne); }
             .projet button { grid-template-columns: 50px 1fr 30px; }
             .projet .cl { grid-column: 2; grid-row: 1; }
             .projet .ti { grid-column: 2; }
@@ -543,8 +633,19 @@
             .orateur { grid-template-columns: 110px 1fr; }
             .bulle p { font-size: 1.02rem; }
             .choix-apps { grid-template-columns: 1fr 1fr; }
-            .choix-apps > div:nth-child(3) label { border-left: 0; }
-            .choix-apps > div:nth-child(n+3) label { border-top: 1px solid #b9c6de; }
+            .choix-apps > div:last-child:nth-child(odd) { grid-column: span 2; }
+            .atouts { grid-template-columns: 1fr; margin-bottom: 50px; }
+            .atouts > div:nth-child(even) { padding-left: 0; border-left: 0; }
+
+            .onglet { flex-basis: 118px; padding: 8px 10px 10px; }
+            .produit { padding: 32px 0 44px; }
+            .grille-gains { grid-template-columns: 1fr; }
+            .telephone { width: 150px; }
+            .miniature { flex-basis: 104px; }
+            .ecran figcaption { font-size: .86rem; }
+            .pied-fiche { flex-direction: column; align-items: stretch; }
+            .pied-fiche .bouton { justify-content: center; }
+            .indicateurs b { font-size: 1.8rem; }
             .formulaire { padding: 28px 20px; }
             .etude { padding: 26px 20px; }
             .projet .detail p, .projet .tags { margin-left: 0; }
@@ -563,10 +664,10 @@
     <div class="cadre">
         <a href="#haut" class="signature"><b>Traoré</b> Mohamed</a>
         <ul class="menu" id="menu">
-            <li><a href="#profil">Profil</a></li>
+            <li><a href="#profil">À propos</a></li>
             <li><a href="#parcours">Parcours</a></li>
             <li><a href="#projets">Projets</a></li>
-            <li><a href="#solutions">Logiciels</a></li>
+            <li><a href="#solutions">Solutions</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <button class="burger" id="burger" aria-expanded="false">Menu</button>
@@ -578,17 +679,17 @@
     <div class="cadre">
         <div>
             <div class="meta mono">
-                <span>Chef de projet chez Barnoin Informatique</span>
+                <span>Chef de projet IT · Barnoin Informatique</span>
                 <span>Abidjan</span>
-                <span>Ingénieur logiciel & data</span>
+                <span>Ingénieur logiciel et Data</span>
             </div>
             <h1>
                 <span class="ligne-t"><span>Traoré</span></span>
                 <span class="ligne-t"><span><em>Mohamed</em></span></span>
             </h1>
             <p class="intro">
-                Je dirige des projets de digitalisation pour des institutions ivoiriennes : <strong>CNPS, FDFP, FAFCI, AEJ</strong>.
-                Ancien développeur et tech lead, je suis à l'aise autant dans un comité de pilotage que dans le code et les données.
+                Je travaille sur des projets informatiques qui vont de la conception au déploiement : <strong>applications métier, plateformes web, données et outils de pilotage</strong>.
+                Mon parcours m'a amené du développement logiciel au pilotage de projets, avec une attention particulière aux besoins des utilisateurs et aux contraintes techniques.
             </p>
             <div class="actions">
                 <a href="#projets" class="bouton">Voir les projets <span class="fleche">→</span></a>
@@ -607,7 +708,7 @@
                 <rect class="dessine" x="300" y="380" width="70" height="70" style="--l:280; animation-delay:1.4s; stroke-dasharray:4 4"/>
             </svg>
             <figcaption class="legende mono"><span>fig. 01</span><span>{{ now()->year }}</span></figcaption>
-            <div class="cartouche"><b>{{ $anneesExperience }} ans</b>de projets livrés depuis 2018</div>
+            <div class="cartouche"><b>{{ $anneesExperience }} ans</b>chez Barnoin Informatique</div>
         </figure>
     </div>
 
@@ -631,32 +732,32 @@
         </div>
 
         <div class="chiffres decale" id="chiffres" style="margin-bottom:80px">
-            <div style="--i:0"><b data-compte="{{ $anneesExperience }}">0</b><span>ans d'expérience chez Barnoin Informatique</span></div>
-            <div style="--i:1"><b data-compte="{{ count($projets) + 1 }}">0</b><span>projets institutionnels suivis</span></div>
-            <div style="--i:2"><b data-compte="{{ count($applications) }}">0</b><span>logiciels SaaS conçus et édités</span></div>
-            <div style="--i:3"><b data-compte="2">0</b><span>mastères en cours, IA et Big Data</span></div>
+            <div style="--i:0"><b data-compte="{{ $anneesExperience }}">{{ $anneesExperience }}</b><span>ans chez Barnoin Informatique</span></div>
+            <div style="--i:1"><b data-compte="8">8</b><span>projets suivis et accompagnés</span></div>
+            <div style="--i:2"><b data-compte="{{ count($applications) }}">{{ count($applications) }}</b><span>logiciels conçus et commercialisés</span></div>
+            <div style="--i:3"><b data-compte="2">2</b><span>mastères spécialisés en cours : IA et Big Data</span></div>
         </div>
 
         <div class="profil decale">
             <div class="texte revele">
                 <p>
-                    Je suis entré chez Barnoin Informatique en décembre 2018 comme stagiaire. J'ai évolué comme
-                    développeur logiciel en 2019, puis je suis devenu ingénieur développement et data.
+                    J'ai rejoint Barnoin Informatique en décembre 2018 comme ingénieur développement et data. Depuis,
+                    mon travail a évolué avec les projets : développement d'applications, traitement des données,
+                    encadrement technique et pilotage.
                 </p>
                 <p>
-                    J'ai ensuite été <span class="marque">tech lead<svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 7 C 25 2, 60 9, 98 4"/></svg></span>
-                    sur plusieurs projets : la dématérialisation des services de Victoire Immobilier, la mise en place du site web
-                    de GNA Assurances, la gestion des cartes de fidélité de Librairie de France et la digitalisation du FDFP,
-                    avant d'être nommé chef de projet technique et IA.
+                    J'ai ensuite pris des responsabilités de tech lead sur plusieurs réalisations, notamment dans
+                    l'immobilier, l'assurance, la fidélisation client et la digitalisation des processus du FDFP.
+                    Cette expérience m'a progressivement conduit vers le pilotage de projets et la coordination des équipes.
                 </p>
                 <p>
-                    Aujourd'hui, je pilote l'ensemble du portefeuille : les applications de la CNPS (e-CNPS et Contrôle médical),
-                    du FDFP, du FAFCI et de l'AEJ. En parallèle, j'ai développé quatre logiciels que je commercialise.
+                    J'interviens aujourd'hui sur des projets liés à la CNPS, au FDFP, au FAFCI et à l'AEJ. Je développe
+                    également des solutions logicielles que je fais évoluer et que je propose à des organisations.
                 </p>
             </div>
             <dl class="fiche revele">
-                <div><dt class="mono">Poste</dt><dd>Chef de projet, Barnoin Informatique</dd></div>
-                <div><dt class="mono">Ville</dt><dd>Abidjan, Côte d'Ivoire</dd></div>
+                <div><dt class="mono">Fonction</dt><dd>Chef de projet IT, Barnoin Informatique</dd></div>
+                <div><dt class="mono">Localisation</dt><dd>Abidjan, Côte d'Ivoire</dd></div>
                 <div><dt class="mono">Langues</dt><dd>Français, anglais</dd></div>
                 <div><dt class="mono">E-mail</dt><dd><a href="mailto:traoremohamed2g@gmail.com">traoremohamed2g@gmail.com</a></dd></div>
                 <div><dt class="mono">Téléphone</dt><dd><a href="tel:+2250709495198">+225 07 09 49 51 98</a></dd></div>
@@ -665,33 +766,29 @@
     </div>
 </section>
 
-<!-- Ce que j'apporte -->
+<!-- Expérience de travail -->
 <section class="section" style="padding-top:0">
     <div class="cadre">
         <div class="titre-section revele">
-            <span class="num mono">02 / Pourquoi moi</span>
-            <h2>Ce que j'apporte à <em>une équipe</em>.</h2>
+            <span class="num mono">02 / Façon de travailler</span>
+            <h2>Un pied dans le métier, un autre dans la technique.</h2>
         </div>
-        <div class="dialogue" id="dialogue">
-            <div class="orateur revele" id="orateur">
-                <div class="bulle" aria-live="polite">
-                    <span class="mono qui">Traoré Mohamed <i id="bulleNum">01</i></span>
-                    <p><span id="bulleTexte"></span><span class="caret"></span></p>
-                </div>
-                <figure class="portrait-parle">
-                    <img src="{{ asset('frontend/img/traore-mohamed.jpg') }}" alt="Traoré Mohamed">
-                    <div class="onde" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-                </figure>
-                <span class="mono astuce">Survolez un point pour changer de sujet</span>
+        <div class="competences revele" style="margin-left:0" id="outils-travail">
+            <div>
+                <h3>Comprendre le besoin</h3>
+                <ul><li>Échanger avec les utilisateurs</li><li>Préciser le périmètre</li><li>Formaliser les besoins</li></ul>
             </div>
-            <div class="apports">
-                @foreach ($apports as $i => [$titre, $texte])
-                    <article class="apport revele" data-parole="{{ $paroles[$i] }}" tabindex="0" style="transition-delay: {{ ($i % 2) * .1 }}s">
-                        <span class="mono">{{ sprintf('%02d', $i + 1) }}</span>
-                        <h3>{{ $titre }}</h3>
-                        <p>{{ $texte }}</p>
-                    </article>
-                @endforeach
+            <div>
+                <h3>Organiser le travail</h3>
+                <ul><li>Planifier les activités</li><li>Coordonner les intervenants</li><li>Suivre les points de blocage</li></ul>
+            </div>
+            <div>
+                <h3>Suivre la réalisation</h3>
+                <ul><li>Échanger avec les développeurs</li><li>Suivre les évolutions</li><li>Préparer les recettes</li></ul>
+            </div>
+            <div>
+                <h3>Aller jusqu'à la livraison</h3>
+                <ul><li>Préparer la mise en production</li><li>Documenter</li><li>Accompagner les utilisateurs</li></ul>
             </div>
         </div>
     </div>
@@ -702,7 +799,7 @@
     <div class="cadre">
         <div class="titre-section revele">
             <span class="num mono">03 / Parcours</span>
-            <h2>Une même entreprise depuis 2018, <em>trois métiers</em>.</h2>
+            <h2>Mon parcours chez Barnoin et mes premières expériences.</h2>
         </div>
         <div class="parcours" id="frise">
             <div class="rail"><i id="railPlein"></i></div>
@@ -725,7 +822,7 @@
     <div class="cadre">
         <div class="titre-section revele">
             <span class="num mono">04 / Projets</span>
-            <h2>Les projets que je <em>conduis</em> chez Barnoin.</h2>
+            <h2>Quelques projets auxquels j'ai contribué.</h2>
         </div>
 
         <article class="etude revele">
@@ -733,16 +830,16 @@
                 <span class="mono">Étude de cas · FDFP</span>
                 <h3>Digitaliser tous les processus métier du FDFP</h3>
                 <p>
-                    Le Fonds de Développement de la Formation Professionnelle voulait dématérialiser l'ensemble de son activité,
-                    du dépôt des demandes de financement jusqu'au suivi des formations.
+                    Le projet FDFP porte sur la digitalisation de plusieurs processus liés à la formation professionnelle,
+                    depuis les démarches des entreprises jusqu'au traitement et au suivi des dossiers par les équipes.
                 </p>
                 <p>
                     J'ai démarré le projet comme tech lead : architecture, choix techniques, encadrement des développeurs.
                     J'en ai ensuite pris la direction : planning, arbitrages avec le client, recettes et mises en production.
                 </p>
                 <ul>
-                    <li><span>Rôle</span><span>Tech lead, puis chef de projet</span></li>
-                    <li><span>Stack</span><span>Laravel, PostgreSQL, Docker, GitLab CI/CD</span></li>
+                    <li><span>Intervention</span><span>Tech lead puis pilotage de projet</span></li>
+                    <li><span>Environnement</span><span>Laravel, PostgreSQL, Docker, GitLab CI/CD</span></li>
                     <li><span>Méthode</span><span>Scrum, livraisons par lots</span></li>
                 </ul>
             </div>
@@ -810,7 +907,7 @@
     <div class="cadre">
         <div class="titre-section revele">
             <span class="num mono">05 / Outils</span>
-            <h2>Ce que j'utilise aujourd'hui, et <em>où je vais</em>.</h2>
+            <h2>Les outils et méthodes que j'utilise.</h2>
         </div>
 
         <div class="horizon decale" id="horizon">
@@ -843,28 +940,143 @@
     <div class="cadre">
         <div class="titre-section revele">
             <span class="num mono">06 / Logiciels</span>
-            <h2>Quatre logiciels que j'ai conçus et que je <em>commercialise</em>.</h2>
+            <div>
+                <h2>{{ count($applications) }} logiciels métier, conçus pour <em>les réalités du terrain ivoirien</em>.</h2>
+                <p class="chapeau">Je les ai conçus, développés et testés de bout en bout. Chacun part d'un problème concret : recettes qui se perdent, stocks mal suivis, documents falsifiables, équipes sans réseau. Choisissez un secteur pour voir les écrans réels, ce que le logiciel résout et ce que vous y gagnez.</p>
+            </div>
         </div>
-        <div class="logiciels">
+
+        <!-- Ce que tous les logiciels ont en commun -->
+        <div class="atouts revele">
+            @foreach ($atoutsCommuns as [$titre, $texte])
+                <div style="--i:{{ $loop->index }}">
+                    <span class="mono">{{ sprintf('%02d', $loop->iteration) }}</span>
+                    <h3>{{ $titre }}</h3>
+                    <p>{{ $texte }}</p>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Sélecteur : un onglet par logiciel (de simples ancres si le JavaScript est désactivé) -->
+        <nav class="selecteur revele" aria-label="Choisir un logiciel">
+            <span class="mono legende-sel">Choisissez un logiciel</span>
+            <div class="onglets" role="tablist">
+                @foreach ($applications as $code => $app)
+                    <a href="#logiciel-{{ $app['dossier'] }}" class="onglet" role="tab" id="onglet-{{ $app['dossier'] }}" aria-controls="logiciel-{{ $app['dossier'] }}" style="--teinte: {{ $app['couleur'] }}">
+                        <span class="mono">{{ sprintf('%02d', $loop->iteration) }} · {{ $app['secteur'] }}</span>
+                        <b>{{ $app['nom'] }}</b>
+                    </a>
+                @endforeach
+            </div>
+        </nav>
+
+        <div class="fiches">
             @foreach ($applications as $code => $app)
-                <article class="logiciel revele">
-                    <span class="idx mono">{{ sprintf('%02d', $loop->iteration) }}</span>
-                    <div>
-                        <h3>{{ $app['nom'] }}</h3>
-                        <div class="slogan">{{ $app['slogan'] }}</div>
-                        <a href="{{ $app['url'] }}" target="_blank" rel="noopener" class="url mono">{{ parse_url($app['url'], PHP_URL_HOST) }} ↗</a>
+                @php
+                    $captures = $app['captures'] ?? [];
+                    $mobiles = $app['mobile'] ?? [];
+                    $dossierImg = 'frontend/logiciels/' . $app['dossier'] . '/';
+                @endphp
+                <article class="produit" id="logiciel-{{ $app['dossier'] }}" role="tabpanel" aria-labelledby="onglet-{{ $app['dossier'] }}" style="--teinte: {{ $app['couleur'] }}">
+                    <header class="fiche-tete">
+                        <div>
+                            <span class="mono secteur">{{ $app['secteur'] }} <i>·</i> <span class="statut">{{ $app['statut'] }}</span></span>
+                            <h3>{{ $app['nom'] }}</h3>
+                            <p class="slogan">{{ $app['slogan'] }}</p>
+                            <p class="pour"><span class="mono">Pour</span> {{ $app['pour'] }}</p>
+                        </div>
+                        <div class="actions-l">
+                            <a href="#demande" class="bouton" data-application="{{ $code }}">{{ $app['url'] ? 'Demander un accès' : 'Demander une démonstration' }} <span class="fleche">→</span></a>
+                            @if ($app['url'])
+                                <a href="{{ $app['url'] }}" target="_blank" rel="noopener" class="url mono">{{ parse_url($app['url'], PHP_URL_HOST) }} ↗</a>
+                            @endif
+                        </div>
+                    </header>
+
+                    @if ($captures)
+                        <div class="vitrine {{ $mobiles ? 'avec-mobile' : '' }}">
+                            <div class="galerie" data-galerie>
+                                <figure class="ecran">
+                                    <div class="fenetre" aria-hidden="true"><i></i><i></i><i></i><span class="mono">{{ $app['url'] ? parse_url($app['url'], PHP_URL_HOST) : strtolower($app['nom']) . ' · démo' }}</span></div>
+                                    <button type="button" class="agrandir" aria-label="Agrandir la capture">
+                                        <img src="{{ asset($dossierImg . $captures[0][0]) }}" alt="{{ $app['nom'] }} : {{ $captures[0][1] }}" width="1440" height="900" loading="lazy" decoding="async" data-principale>
+                                        <span class="loupe mono">Agrandir ⤢</span>
+                                    </button>
+                                    <figcaption><span class="mono compteur" data-compteur>1 / {{ count($captures) }}</span> <span data-legende>{{ $captures[0][1] }}</span></figcaption>
+                                </figure>
+                                <div class="miniatures" role="list">
+                                    @foreach ($captures as [$fichier, $legende])
+                                        <button type="button" role="listitem" class="miniature {{ $loop->first ? 'active' : '' }}" data-src="{{ asset($dossierImg . $fichier) }}" data-legende="{{ $legende }}" aria-label="Voir : {{ $legende }}">
+                                            <img src="{{ asset($dossierImg . $fichier) }}" alt="" width="160" height="100" loading="lazy" decoding="async">
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @if ($mobiles)
+                                <div class="telephones">
+                                    @foreach ($mobiles as [$fichier, $legende])
+                                        <figure class="telephone">
+                                            <img src="{{ asset($dossierImg . $fichier) }}" alt="{{ $app['nom'] }} sur mobile : {{ $legende }}" loading="lazy" decoding="async">
+                                            <figcaption class="mono">{{ $legende }}</figcaption>
+                                        </figure>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
+                    <div class="indicateurs">
+                        @foreach ($app['chiffres'] ?? [] as [$valeur, $libelle])
+                            <div><b>{{ $valeur }}</b><span>{{ $libelle }}</span></div>
+                        @endforeach
                     </div>
-                    <div class="desc">
-                        {{ $app['description'] }}
-                        <div class="fonctions mono">{{ implode(' · ', $app['fonctions']) }}</div>
+
+                    <div class="argumentaire">
+                        <div class="constat">
+                            <h4 class="mono">Le constat</h4>
+                            <ul>
+                                @foreach ($app['constat'] ?? [] as [$titre, $texte])
+                                    <li><b>{{ $titre }}</b><span>{{ $texte }}</span></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="gains">
+                            <h4 class="mono">Ce que vous y gagnez</h4>
+                            <div class="grille-gains">
+                                @foreach ($app['avantages'] ?? [] as [$titre, $texte])
+                                    <div><h5>{{ $titre }}</h5><p>{{ $texte }}</p></div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
-                    <div class="actions-l">
-                        <a href="#demande" class="bouton" data-application="{{ $code }}">Demander un accès</a>
+
+                    <div class="pied-fiche">
+                        <div class="modules-l">
+                            @foreach ($app['fonctions'] as $fonction)
+                                <span class="mono">{{ $fonction }}</span>
+                            @endforeach
+                        </div>
+                        <a href="#demande" class="bouton clair" data-application="{{ $code }}">Essayer {{ $app['nom'] }} <span class="fleche">→</span></a>
                     </div>
                 </article>
             @endforeach
         </div>
+        <p class="note-captures mono">Captures réelles des applications, prises sur des environnements de démonstration aux données fictives.</p>
     </div>
+
+    <!-- Visionneuse plein écran -->
+    <dialog class="visionneuse" id="visionneuse" aria-label="Capture d'écran agrandie">
+        <div class="visionneuse-haut">
+            <span class="mono" id="visionneuseTitre"></span>
+            <button type="button" class="fermer mono" data-fermer aria-label="Fermer">Fermer ✕</button>
+        </div>
+        <img id="visionneuseImg" alt="">
+        <div class="visionneuse-bas">
+            <button type="button" class="nav-v mono" data-pas="-1" aria-label="Capture précédente">← Préc.</button>
+            <p id="visionneuseLegende"></p>
+            <button type="button" class="nav-v mono" data-pas="1" aria-label="Capture suivante">Suiv. →</button>
+        </div>
+    </dialog>
 </section>
 
 <!-- Demande d'accès -->
@@ -946,7 +1158,7 @@
     <div class="cadre">
         <div class="titre-section revele">
             <span class="num mono">07 / Formation</span>
-            <h2>Je continue à <em>me former</em>.</h2>
+            <h2>Formation.</h2>
         </div>
         <div class="formations decale revele">
             @foreach ($formations as [$diplome, $ecole, $etat])
@@ -965,7 +1177,7 @@
     <div class="cadre bloc-form">
         <div class="gauche revele">
             <span class="mono">08 / Contact</span>
-            <h2>Un poste, une mission, un projet ?</h2>
+            <h2>Échangeons sur un poste, une mission ou un projet.</h2>
             <a href="mailto:traoremohamed2g@gmail.com" class="grand-mail">traoremohamed2g@gmail.com</a>
             <ul class="coordonnees">
                 <li><span class="mono">Tél.</span><a href="tel:+2250709495198">+225 07 09 49 51 98</a></li>
@@ -1034,6 +1246,7 @@
 
 <script>
 (() => {
+    document.documentElement.classList.add('js-animations');
     const csrf = document.querySelector('meta[name="csrf-token"]').content;
     const entete = document.getElementById('entete');
     const menu = document.getElementById('menu');
@@ -1048,8 +1261,10 @@
         let ici = -1;
         sections.forEach((s, i) => { if (s && s.getBoundingClientRect().top < innerHeight * .4) ici = i; });
         liens.forEach((a, i) => a.classList.toggle('ici', i === ici));
-        const r = frise.getBoundingClientRect();
-        railPlein.style.height = Math.min(Math.max((innerHeight * .65 - r.top) / r.height, 0), 1) * 100 + '%';
+        if (frise && railPlein) {
+            const r = frise.getBoundingClientRect();
+            railPlein.style.height = Math.min(Math.max((innerHeight * .65 - r.top) / r.height, 0), 1) * 100 + '%';
+        }
     }
     addEventListener('scroll', defilement, { passive: true });
     defilement();
@@ -1063,10 +1278,14 @@
 
     // Apparitions et compteurs
     function compter(el) {
-        const cible = +el.dataset.compte, debut = performance.now();
+        const cible = +el.dataset.compte;
+        const depart = Number(el.textContent) || 0;
+        if (depart === cible) return;
+        const debut = performance.now();
         (function pas(t) {
-            const p = Math.min((t - debut) / 1400, 1);
-            el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 4)));
+            const p = Math.min((t - debut) / 900, 1);
+            const progression = 1 - Math.pow(1 - p, 4);
+            el.textContent = Math.round(depart + (cible - depart) * progression);
             if (p < 1) requestAnimationFrame(pas);
         })(debut);
     }
@@ -1082,57 +1301,104 @@
     }), { threshold: .2, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('.revele, #schema, #chiffres, #horizon, #outils').forEach(el => obs.observe(el));
 
-    // « Pourquoi moi » : la bulle dit chaque point, comme une prise de parole
-    const dialogue = document.getElementById('dialogue');
-    const orateur = document.getElementById('orateur');
-    const bulleTexte = document.getElementById('bulleTexte');
-    const bulleNum = document.getElementById('bulleNum');
-    const points = [...dialogue.querySelectorAll('.apport')];
-    const lent = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let sujet = -1, frappe, suite, visible = false;
-
-    function dire(i) {
-        clearTimeout(frappe); clearTimeout(suite);
-        sujet = i;
-        dialogue.classList.add('actif');
-        points.forEach((p, k) => p.classList.toggle('dit', k === i));
-        bulleNum.textContent = String(i + 1).padStart(2, '0');
-        const phrase = points[i].dataset.parole;
-        if (lent) { bulleTexte.textContent = phrase; return planifier(); }
-        orateur.classList.add('parle');
-        let n = 0;
-        (function lettre() {
-            bulleTexte.textContent = phrase.slice(0, ++n);
-            if (n < phrase.length) {
-                // Petites pauses sur la ponctuation, comme à l'oral
-                const c = phrase[n - 1];
-                frappe = setTimeout(lettre, /[.,:;]/.test(c) ? 260 : 24 + Math.random() * 30);
-            } else {
-                orateur.classList.remove('parle');
-                planifier();
-            }
-        })();
-    }
-    function planifier() { if (visible) suite = setTimeout(() => dire((sujet + 1) % points.length), 3800); }
-
-    new IntersectionObserver(([e]) => {
-        visible = e.isIntersecting;
-        if (visible && sujet === -1) setTimeout(() => dire(0), 600);
-        else if (visible && !orateur.classList.contains('parle')) planifier();
-        else if (!visible) clearTimeout(suite);
-    }, { threshold: .35 }).observe(dialogue);
-
-    points.forEach((p, i) => {
-        p.addEventListener('mouseenter', () => { if (i !== sujet) dire(i); });
-        p.addEventListener('focus', () => { if (i !== sujet) dire(i); });
-        p.addEventListener('click', () => dire(i));
-    });
-
     // Projets dépliables
     document.querySelectorAll('.projet button').forEach(b => b.addEventListener('click', () => {
         const ouvert = b.parentElement.classList.toggle('ouvert');
         b.setAttribute('aria-expanded', ouvert);
     }));
+
+    // Logiciels : un onglet par logiciel. Sans JavaScript, toutes les fiches restent affichées les unes sous les autres.
+    const fiches = [...document.querySelectorAll('.produit')];
+    const onglets = [...document.querySelectorAll('.onglet')];
+    if (fiches.length) {
+        document.documentElement.classList.add('js-onglets');
+        const montrer = (id, defiler) => {
+            const fiche = document.getElementById(id) || fiches[0];
+            fiches.forEach(f => f.classList.toggle('active', f === fiche));
+            onglets.forEach(o => {
+                const actif = o.getAttribute('aria-controls') === fiche.id;
+                o.setAttribute('aria-selected', actif);
+                o.tabIndex = actif ? 0 : -1;
+                if (actif) o.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            });
+            const marge = (document.querySelector('.selecteur')?.offsetHeight || 0) + 68 + 16;
+            if (defiler && fiche.getBoundingClientRect().top < marge) {
+                scrollTo({ top: scrollY + fiche.getBoundingClientRect().top - marge, behavior: 'smooth' });
+            }
+        };
+        onglets.forEach((o, i) => {
+            o.addEventListener('click', e => {
+                e.preventDefault();
+                montrer(o.getAttribute('aria-controls'), true);
+                history.replaceState(null, '', '#' + o.getAttribute('aria-controls'));
+            });
+            o.addEventListener('keydown', e => {
+                const pas = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+                if (!pas) return;
+                e.preventDefault();
+                const suivant = onglets[(i + pas + onglets.length) % onglets.length];
+                suivant.focus();
+                suivant.click();
+            });
+        });
+        const ancre = location.hash.slice(1);
+        montrer(ancre.startsWith('logiciel-') ? ancre : fiches[0].id, false);
+        if (ancre.startsWith('logiciel-')) setTimeout(() => { const f = document.getElementById(ancre); if (f) scrollTo({ top: scrollY + f.getBoundingClientRect().top - ((document.querySelector('.selecteur')?.offsetHeight || 0) + 84) }); }, 60);
+    }
+
+    // Galeries de captures et visionneuse plein écran
+    const visionneuse = document.getElementById('visionneuse');
+    const vImg = document.getElementById('visionneuseImg');
+    const vLegende = document.getElementById('visionneuseLegende');
+    const vTitre = document.getElementById('visionneuseTitre');
+    let vListe = [], vIndex = 0;
+    function afficherV() {
+        const m = vListe[vIndex];
+        vImg.src = m.dataset.src;
+        vImg.alt = m.dataset.legende;
+        vLegende.textContent = m.dataset.legende;
+        vTitre.textContent = `${vTitre.dataset.nom} · ${vIndex + 1} / ${vListe.length}`;
+    }
+    document.querySelectorAll('[data-galerie]').forEach(g => {
+        const principale = g.querySelector('[data-principale]');
+        const legende = g.querySelector('[data-legende]');
+        const compteur = g.querySelector('[data-compteur]');
+        const minis = [...g.querySelectorAll('.miniature')];
+        const nom = g.closest('.produit').querySelector('h3').textContent;
+        const choisir = i => {
+            const m = minis[i];
+            minis.forEach(x => x.classList.toggle('active', x === m));
+            principale.classList.add('change');
+            const img = new Image();
+            img.onload = img.onerror = () => {
+                principale.src = m.dataset.src;
+                principale.alt = `${nom} : ${m.dataset.legende}`;
+                principale.classList.remove('change');
+            };
+            img.src = m.dataset.src;
+            legende.textContent = m.dataset.legende;
+            compteur.textContent = `${i + 1} / ${minis.length}`;
+        };
+        minis.forEach((m, i) => m.addEventListener('click', () => choisir(i)));
+        g.querySelector('.agrandir').addEventListener('click', () => {
+            if (!visionneuse.showModal) { window.open(principale.src, '_blank', 'noopener'); return; }
+            vListe = minis;
+            vIndex = Math.max(0, minis.findIndex(m => m.classList.contains('active')));
+            vTitre.dataset.nom = nom;
+            afficherV();
+            visionneuse.showModal();
+        });
+    });
+    if (visionneuse) {
+        const deplacer = pas => { vIndex = (vIndex + pas + vListe.length) % vListe.length; afficherV(); };
+        visionneuse.querySelectorAll('[data-pas]').forEach(b => b.addEventListener('click', () => deplacer(+b.dataset.pas)));
+        visionneuse.querySelector('[data-fermer]').addEventListener('click', () => visionneuse.close());
+        visionneuse.addEventListener('click', e => { if (e.target === visionneuse) visionneuse.close(); });
+        visionneuse.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') deplacer(1);
+            if (e.key === 'ArrowLeft') deplacer(-1);
+        });
+    }
 
     // Le bouton « Demander un accès » présélectionne le logiciel
     document.querySelectorAll('[data-application]').forEach(b => b.addEventListener('click', () => {
